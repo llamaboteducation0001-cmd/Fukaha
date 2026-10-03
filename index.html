@@ -1,0 +1,749 @@
+```html
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Planner & Schedule - Personal Edition</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        neon: {
+                            purple: '#a855f7',
+                            purpleDark: '#7e22ce',
+                            blue: '#3b82f6',
+                            cyan: '#06b6d4',
+                            pink: '#ec4899',
+                            darkBg: '#090d16',
+                            cardBg: '#111827'
+                        }
+                    },
+                    boxShadow: {
+                        'neon-purple': '0 0 20px rgba(168, 85, 247, 0.4), inset 0 0 10px rgba(168, 85, 247, 0.2)',
+                        'neon-blue': '0 0 20px rgba(59, 130, 246, 0.4), inset 0 0 10px rgba(59, 130, 246, 0.2)',
+                        'neon-cyan': '0 0 20px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2)',
+                        'glow-lg': '0 0 35px rgba(168, 85, 247, 0.25)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #070a12;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.08) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .neon-border-purple {
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        .neon-border-blue {
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .neon-border-cyan {
+            border: 1px solid rgba(6, 182, 212, 0.5);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .neon-text-purple {
+            color: #c084fc;
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+        }
+
+        .neon-text-blue {
+            color: #60a5fa;
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+        }
+
+        .neon-text-cyan {
+            color: #22d3ee;
+            text-shadow: 0 0 12px rgba(6, 182, 212, 0.7);
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2.5s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 15px rgba(168, 85, 247, 0.3), 0 0 30px rgba(59, 130, 246, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(168, 85, 247, 0.6), 0 0 50px rgba(59, 130, 246, 0.4);
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16 flex flex-col items-center justify-start antialiased">
+
+    <header class="w-full max-w-4xl px-4 pt-6 pb-4 sticky top-0 z-50 backdrop-blur-md bg-[#070a12]/80 border-b border-purple-500/20">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- App Brand & Title -->
+            <div class="flex items-center gap-3 text-center md:text-left">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center text-white text-xl shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+                    <i class="fa-solid fa-calendar-check"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-400">
+                        DAILY PLANNER
+                    </h1>
+                    <p class="text-xs text-purple-300/70 font-medium flex items-center gap-1.5 justify-center md:justify-start">
+                        <span>Rutinitas & Priority List</span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                        <span class="text-cyan-400 font-semibold"><i class="fa-solid fa-shield-halved text-[10px]"></i> nxthnel</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Date Widget (Real-time device date) -->
+            <div class="bg-slate-900/90 rounded-2xl p-3 px-5 border border-blue-500/30 flex items-center gap-3 shadow-lg">
+                <i class="fa-solid fa-clock text-blue-400 text-lg"></i>
+                <div>
+                    <div id="live-date-str" class="text-xs uppercase font-bold tracking-wider text-blue-300/80">Hari ini</div>
+                    <div id="live-full-date" class="text-sm font-semibold text-white">28 September 2026</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl px-4 mt-6 flex-1 flex flex-col gap-6">
+
+        <!-- Day Navigation Tabs -->
+        <section class="bg-slate-900/60 p-2 rounded-2xl border border-purple-500/20 backdrop-blur-sm">
+            <div class="text-xs font-semibold text-slate-400 mb-2 px-2 flex items-center justify-between">
+                <span>PILIH HARI JADWAL:</span>
+                <span id="active-day-badge" class="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 font-mono">Hari Ini</span>
+            </div>
+            <div class="grid grid-cols-7 gap-1 md:gap-2 overflow-x-auto" id="days-tab-container">
+                <!-- Day buttons generated via JS -->
+            </div>
+        </section>
+
+        <!-- Overtime (Lembur) Toggle Card -->
+        <section id="lembur-control-section" class="bg-slate-900/80 p-4 rounded-2xl border transition-all duration-300 pulse-glow flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div id="lembur-icon-box" class="w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg">
+                    <i class="fa-solid fa-user-clock"></i>
+                </div>
+                <div>
+                    <h3 id="lembur-title" class="font-bold text-slate-200 text-sm md:text-base flex items-center gap-2">
+                        Status Lembur Kerja
+                        <span id="lembur-badge" class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 border border-slate-700">Tentu</span>
+                    </h3>
+                    <p id="lembur-desc" class="text-xs text-slate-400 mt-0.5">
+                        Aktifkan jika ada instruksi lembur hari ini (sampai 21:30 WIB).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Toggle Switch -->
+            <label class="relative inline-flex items-center cursor-pointer select-none">
+                <input type="checkbox" id="lembur-toggle" class="sr-only peer">
+                <div class="w-14 h-7 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-slate-200 after:border-slate-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-600 peer-checked:to-cyan-600 border border-slate-700 shadow-inner"></div>
+                <span id="toggle-label-text" class="ml-3 text-xs font-bold text-slate-300 min-w-[70px]">NORMAL</span>
+            </label>
+        </section>
+
+        <!-- Timeline Routine Section -->
+        <section class="bg-slate-900/40 rounded-3xl p-4 md:p-6 border border-slate-800 backdrop-blur-md relative overflow-hidden">
+            <!-- Decorative Ambient Glows -->
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping"></span>
+                    <h2 class="text-lg font-bold text-white tracking-wide" id="schedule-header-title">
+                        Jadwal Harian
+                    </h2>
+                </div>
+                <div class="text-xs text-slate-400 font-mono bg-slate-800/80 px-3 py-1 rounded-full border border-slate-700/50" id="item-count-badge">
+                    0 Aktivitas
+                </div>
+            </div>
+
+            <!-- Timeline Content Container -->
+            <div id="timeline-container" class="relative pl-3 md:pl-6 space-y-6 before:absolute before:left-[19px] md:before:left-[31px] before:top-3 before:bottom-3 before:w-0.5 before:bg-gradient-to-b before:from-purple-500 before:via-blue-500 before:to-cyan-500">
+                <!-- Timeline items rendered dynamically by JS -->
+            </div>
+        </section>
+
+        <!-- Daily Reminder Widget -->
+        <section class="bg-gradient-to-r from-purple-950/40 via-cyan-950/30 to-slate-900/60 p-5 rounded-2xl border border-cyan-500/30 text-slate-300 relative overflow-hidden shadow-neon-cyan">
+            <div class="flex items-start gap-4 relative z-10">
+                <div class="p-3 bg-cyan-500/20 text-cyan-400 rounded-2xl text-xl border border-cyan-500/40">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-cyan-300 text-sm md:text-base flex items-center gap-2">
+                        Reminder Istirahat & Self Care 📱⚡
+                    </h4>
+                    <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                        Apapun kondisi kerjanya (baik pulang jam 5 sore atau lembur malam jam 21:30), pastikan selalu luangkan waktu istirahat yang cukup, jaga kesehatan tubuh, dan atur waktu layar HP agar jam tidur malam tetap teratur!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-8 text-center text-xs text-slate-500 font-mono">
+        <p>Daily Routine Planner &copy; 2026 &bull; Created by <span class="text-cyan-400 font-bold tracking-wider">nxthnel</span></p>
+    </footer>
+
+    <script>
+        // Days of week mapping in Indonesian
+        const DAYS_ID = [
+            { id: 'minggu', name: 'Minggu', short: 'Min', dayNum: 0 },
+            { id: 'senin', name: 'Senin', short: 'Sen', dayNum: 1 },
+            { id: 'selasa', name: 'Selasa', short: 'Sel', dayNum: 2 },
+            { id: 'rabu', name: 'Rabu', short: 'Rab', dayNum: 3 },
+            { id: 'kamis', name: 'Kamis', short: 'Kam', dayNum: 4 },
+            { id: 'jumat', name: 'Jumat', short: 'Jum', dayNum: 5 },
+            { id: 'sabtu', name: 'Sabtu', short: 'Sab', dayNum: 6 }
+        ];
+
+        // Global State
+        let selectedDayIndex = 5; // Default Friday or today
+        let isLembur = false;
+        let todayDayNum = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+        // Get elements
+        const daysTabContainer = document.getElementById('days-tab-container');
+        const timelineContainer = document.getElementById('timeline-container');
+        const lemburToggle = document.getElementById('lembur-toggle');
+        const toggleLabelText = document.getElementById('toggle-label-text');
+        const lemburControlSection = document.getElementById('lembur-control-section');
+        const lemburTitle = document.getElementById('lembur-title');
+        const lemburDesc = document.getElementById('lembur-desc');
+        const lemburBadge = document.getElementById('lembur-badge');
+        const lemburIconBox = document.getElementById('lembur-icon-box');
+        const liveDateStr = document.getElementById('live-date-str');
+        const liveFullDate = document.getElementById('live-full-date');
+        const scheduleHeaderTitle = document.getElementById('schedule-header-title');
+        const itemCountBadge = document.getElementById('item-count-badge');
+        const activeDayBadge = document.getElementById('active-day-badge');
+
+        // Initialize Real Time Date on Page Load
+        function initRealTimeDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStringFormatted = now.toLocaleDateString('id-ID', options);
+            
+            // Set dynamic date UI
+            todayDayNum = now.getDay();
+            selectedDayIndex = todayDayNum;
+
+            const dayObj = DAYS_ID.find(d => d.dayNum === todayDayNum);
+            if (liveDateStr) liveDateStr.innerText = `HARI INI (${dayObj ? dayObj.name.toUpperCase() : ''})`;
+            if (liveFullDate) liveFullDate.innerText = dateStringFormatted;
+        }
+
+        // Generate Schedule Items based on Day & Lembur status
+        function getScheduleData(dayNum, isLemburState) {
+            // Sunday (Minggu = 0)
+            if (dayNum === 0) {
+                return [
+                    {
+                        time: '08:00 - 18:00',
+                        title: 'Hari Libur - Istirahat & Main HP Santai 📱',
+                        desc: 'Seharian full bebas dari aktivitas kerja! Santai, istirahat, main HP, nonton film/video, dan rebahan seharian.',
+                        type: 'relax',
+                        icon: 'fa-mobile-screen-button',
+                        badge: 'Full Day Santai'
+                    },
+                    {
+                        time: '18:00 - 22:30',
+                        title: 'Waktu Rehat & Santai Malam 🎮',
+                        desc: 'Scroll medsos, main game, atau santai malam tanpa beban pekerjaan.',
+                        type: 'relax',
+                        icon: 'fa-gamepad',
+                        badge: 'Me Time'
+                    },
+                    {
+                        time: '22:30 - Pagi',
+                        title: 'Tidur Malam & Istirahat Total 🌙',
+                        desc: 'Rebahan, matikan layar HP, lalu tidur nyenyak untuk persiapan esok hari.',
+                        type: 'routine',
+                        icon: 'fa-moon',
+                        badge: 'Tidur Nyenyak'
+                    }
+                ];
+            }
+
+            // Saturday (Sabtu = 6)
+            if (dayNum === 6) {
+                if (!isLemburState) {
+                    // Libur Sabtu
+                    return [
+                        {
+                            time: '08:00 - 18:00',
+                            title: 'Hari Libur Sabtu - Istirahat & Main HP 📱',
+                            desc: 'Tidak ada perintah lembur. Bebas istirahat, olahraga ringan, main HP, dan rehat santai.',
+                            type: 'relax',
+                            icon: 'fa-mug-hot',
+                            badge: 'Hari Libur'
+                        },
+                        {
+                            time: '18:00 - 22:30',
+                            title: 'Waktu Santai & Hiburan Malam 🎬',
+                            desc: 'Rebahan, main HP bentaran, atau nonton film/series kesukaan.',
+                            type: 'relax',
+                            icon: 'fa-tv',
+                            badge: 'Hiburan Malam'
+                        },
+                        {
+                            time: '22:30 - Pagi',
+                            title: 'Istirahat Malam & Tidur 🌙',
+                            desc: 'Santai main HP sebentar lalu tidur nyenyak sampai pagi.',
+                            type: 'routine',
+                            icon: 'fa-bed',
+                            badge: 'Tidur Malam'
+                        }
+                    ];
+                } else {
+                    // Lembur / Masuk Kerja Sabtu (Max jam 5 sore)
+                    return [
+                        {
+                            time: '05:00',
+                            title: 'Bangun Tidur & Beberes Siap Kerja',
+                            desc: 'Bangun pagi, mandi, rapi-rapi dan persiapan untuk masuk kerja lembur hari Sabtu.',
+                            type: 'routine',
+                            icon: 'fa-sun',
+                            badge: 'Pagi Hari'
+                        },
+                        {
+                            time: '06:00 - 06:30',
+                            title: 'Istirahat & Main HP Bentaran 📱',
+                            desc: 'Cek HP sebentar, scroll medsos, atau baca berita sebelum berangkat kerja.',
+                            type: 'relax',
+                            icon: 'fa-mobile-screen-button',
+                            badge: 'Main HP'
+                        },
+                        {
+                            time: '07:00 - 07:45',
+                            title: 'Berangkat & Sampai Tempat Kerja',
+                            desc: 'Berangkat jam 07:00, estimasi tiba di lokasi kerja pukul 07:45 WIB.',
+                            type: 'work',
+                            icon: 'fa-person-walking-luggage',
+                            badge: 'Perjalanan'
+                        },
+                        {
+                            time: '07:45 - 11:30',
+                            title: 'Kerja Lembur Sabtu (Sesi Pagi)',
+                            desc: 'Fokus menyelesaikan pekerjaan lembur sesi pertama.',
+                            type: 'work',
+                            icon: 'fa-briefcase',
+                            badge: 'Kerja'
+                        },
+                        {
+                            time: '11:30 - 12:15',
+                            title: 'Istirahat, Main HP Bentaran & Sholat Dzuhur',
+                            desc: 'Istirahat siang, makan, main HP sebentar, lalu lanjut menunaikan sholat Dzuhur.',
+                            type: 'relax',
+                            icon: 'fa-utensils',
+                            badge: 'Istirahat Siang'
+                        },
+                        {
+                            time: '12:15 - 15:00',
+                            title: 'Lanjut Kerja Lembur Sabtu',
+                            desc: 'Kembali bekerja lembur hingga jam 3 sore.',
+                            type: 'work',
+                            icon: 'fa-laptop-code',
+                            badge: 'Kerja'
+                        },
+                        {
+                            time: '15:00 - 15:15',
+                            title: 'Istirahat & Sholat Ashar',
+                            desc: 'Istirahat sejenak dan menunaikan ibadah sholat Ashar.',
+                            type: 'routine',
+                            icon: 'fa-mosque',
+                            badge: 'Sholat'
+                        },
+                        {
+                            time: '15:15 - 17:00',
+                            title: 'Kerja Sesi Akhir Sabtu (Maksimal Jam 17:00)',
+                            desc: 'Menyelesaikan sisa pekerjaan Sabtu. Kerja maksimal sampai jam 5 sore.',
+                            type: 'work',
+                            icon: 'fa-clock',
+                            badge: 'Selesai Kerja'
+                        },
+                        {
+                            time: '17:00 - 22:30',
+                            title: 'Pulang Kerja, Istirahat & Main HP 📱',
+                            desc: 'Pulang ke rumah, mandi bebersih, santai rebahan sambil main HP.',
+                            type: 'relax',
+                            icon: 'fa-house-user',
+                            badge: 'Waktu Santai'
+                        },
+                        {
+                            time: '22:30 - Pagi',
+                            title: 'Istirahat Malam & Tidur 🌙',
+                            desc: 'Main HP bentaran lalu tidur nyenyak untuk pemulihan tenaga.',
+                            type: 'routine',
+                            icon: 'fa-moon',
+                            badge: 'Tidur Malam'
+                        }
+                    ];
+                }
+            }
+
+            // Weekdays (Senin - Jumat = 1, 2, 3, 4, 5)
+            const baseWeekdays = [
+                {
+                    time: '05:00',
+                    title: 'Bangun Tidur, Mandi & Beberes',
+                    desc: 'Bangun jam 5 pagi, mandi air segar, bebersih diri dan siap-siap berangkat kerja.',
+                    type: 'routine',
+                    icon: 'fa-shower',
+                    badge: 'Persiapan Pagi'
+                },
+                {
+                    time: '06:00 - 06:30',
+                    title: 'Istirahat & Main HP Bentaran 📱',
+                    desc: 'Momen rehat pagi! Cek HP bentaran, scroll medsos, dan baca kabar terbaru sebelum mulai aktivitas.',
+                    type: 'relax',
+                    icon: 'fa-mobile-screen-button',
+                    badge: 'Main HP'
+                },
+                {
+                    time: '07:00',
+                    title: 'Berangkat Kerja',
+                    desc: 'Berangkat dari rumah menuju tempat kerja.',
+                    type: 'work',
+                    icon: 'fa-motorcycle',
+                    badge: 'Perjalanan'
+                },
+                {
+                    time: '07:45',
+                    title: 'Sampai Tempat Kerja',
+                    desc: 'Tiba di lokasi kerja sekitar pukul 07:45 WIB & siap presensi.',
+                    type: 'work',
+                    icon: 'fa-building-user',
+                    badge: 'Tiba di Kantor'
+                },
+                {
+                    time: '07:45 - 11:30',
+                    title: 'Kerja Shift 1 (Pagi)',
+                    desc: 'Fokus mengerjakan tugas & pekerjaan kantor pagi.',
+                    type: 'work',
+                    icon: 'fa-laptop',
+                    badge: 'Sesi Kerja'
+                },
+                {
+                    time: '11:30 - 12:00',
+                    title: 'Istirahat Siang & Makan',
+                    desc: 'Makan siang dan rehat sejenak dari pekerjaan.',
+                    type: 'routine',
+                    icon: 'fa-utensils',
+                    badge: 'Makan Siang'
+                },
+                {
+                    time: '12:00 (Min 5-10 Menit)',
+                    title: 'Istirahat & Main HP Bentaran 📱',
+                    desc: 'Main HP bentaran di sela jam istirahat untuk meregangkan pikiran dari pekerjaan.',
+                    type: 'relax',
+                    icon: 'fa-mobile-screen-button',
+                    badge: 'Main HP'
+                },
+                {
+                    time: '12:05 - 12:15',
+                    title: 'Sholat Dzuhur',
+                    desc: 'Menunaikan ibadah sholat Dzuhur tepat waktu.',
+                    type: 'routine',
+                    icon: 'fa-mosque',
+                    badge: 'Sholat'
+                },
+                {
+                    time: '12:15 - 15:00',
+                    title: 'Kerja Shift 2 (Siang)',
+                    desc: 'Masuk kantor lagi dan melanjutkan sesi pekerjaan siang.',
+                    type: 'work',
+                    icon: 'fa-briefcase',
+                    badge: 'Sesi Kerja'
+                },
+                {
+                    time: '15:00 - 15:15',
+                    title: 'Istirahat & Sholat Ashar',
+                    desc: 'Rehat singkat sore hari dan menunaikan sholat Ashar.',
+                    type: 'routine',
+                    icon: 'fa-coffee',
+                    badge: 'Sholat & Rehat'
+                },
+                {
+                    time: '15:15 - 17:00',
+                    title: 'Kerja Shift 3 (Sore)',
+                    desc: 'Melanjutkan pekerjaan hingga jam 5 sore.',
+                    type: 'work',
+                    icon: 'fa-desktop',
+                    badge: 'Sesi Kerja'
+                }
+            ];
+
+            if (!isLemburState) {
+                // NORMAL SCHEDULE (No Overtime)
+                return [
+                    ...baseWeekdays,
+                    {
+                        time: '17:00',
+                        title: 'Pulang Kerja (Tepat Waktu)',
+                        desc: 'Selesai jam kerja normal. Siap-siap pulang ke rumah.',
+                        type: 'work',
+                        icon: 'fa-house-user',
+                        badge: 'Pulang'
+                    },
+                    {
+                        time: '17:30 - 22:30',
+                        title: 'Istirahat, Bebersih & Main HP 📱',
+                        desc: 'Sampai rumah, mandi air segar, santai rebahan sambil main HP atau nonton hiburan.',
+                        type: 'relax',
+                        icon: 'fa-couch',
+                        badge: 'Waktu Santai'
+                    },
+                    {
+                        time: '22:30 - Pagi',
+                        title: 'Istirahat Malam & Tidur 🌙💤',
+                        desc: 'Pukul 22:30 santai main HP bentaran lalu tidur nyenyak sampai pagi.',
+                        type: 'routine',
+                        icon: 'fa-moon',
+                        badge: 'Tidur Malam'
+                    }
+                ];
+            } else {
+                // OVERTIME SCHEDULE (Lembur Sampai 21:30)
+                return [
+                    ...baseWeekdays,
+                    {
+                        time: '17:00 - 21:30',
+                        title: 'LEMBUR KERJA ⚡',
+                        desc: 'Melanjutkan kerja lembur malam sampai jam 21:30 WIB.',
+                        type: 'lembur',
+                        icon: 'fa-business-time',
+                        badge: 'Lembur Malam'
+                    },
+                    {
+                        time: '21:30',
+                        title: 'Pulang Lembur',
+                        desc: 'Selesai lembur malam, langsung perjalanan pulang ke rumah.',
+                        type: 'work',
+                        icon: 'fa-route',
+                        badge: 'Perjalanan Pulang'
+                    },
+                    {
+                        time: '22:00',
+                        title: 'Sampai Rumah & Mandi Bebersih',
+                        desc: 'Tiba di rumah sekitar jam 10 malam, mandi air hangat, bebersih badan.',
+                        type: 'routine',
+                        icon: 'fa-shower',
+                        badge: 'Bebersih Malam'
+                    },
+                    {
+                        time: '22:30 - Pagi',
+                        title: 'Istirahat Malam & Tidur 🌙💤',
+                        desc: 'Jam 22:30 main HP bentaran lalu langsung tidur untuk pemulihan stamina.',
+                        type: 'routine',
+                        icon: 'fa-bed',
+                        badge: 'Tidur Malam'
+                    }
+                ];
+            }
+        }
+
+        // Render Tabs
+        function renderDayTabs() {
+            daysTabContainer.innerHTML = '';
+            DAYS_ID.forEach((day) => {
+                const isSelected = day.dayNum === selectedDayIndex;
+                const isToday = day.dayNum === todayDayNum;
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectDay(day.dayNum);
+
+                let btnStyle = "flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 text-xs font-semibold ";
+                if (isSelected) {
+                    btnStyle += "bg-gradient-to-b from-purple-600 to-blue-600 text-white shadow-neon-purple border border-purple-400 scale-105 z-10";
+                } else {
+                    btnStyle += "bg-slate-800/60 hover:bg-slate-800 text-slate-400 border border-slate-700/50 hover:text-slate-200";
+                }
+
+                btn.className = btnStyle;
+                btn.innerHTML = `
+                    <span class="text-[10px] opacity-75">${day.short}</span>
+                    <span class="text-xs md:text-sm font-bold mt-0.5">${day.name}</span>
+                    ${isToday ? '<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-1"></span>' : ''}
+                `;
+
+                daysTabContainer.appendChild(btn);
+            });
+        }
+
+        // Select Day
+        function selectDay(dayNum) {
+            selectedDayIndex = dayNum;
+            renderDayTabs();
+            updateLemburControlVisibility();
+            renderTimeline();
+        }
+
+        // Update Lembur Switch UI/State Visibility
+        function updateLemburControlVisibility() {
+            const dayObj = DAYS_ID.find(d => d.dayNum === selectedDayIndex);
+            
+            // Sunday (No work at all)
+            if (selectedDayIndex === 0) {
+                lemburControlSection.classList.add('opacity-50', 'pointer-events-none');
+                lemburTitle.innerHTML = `Status Lembur (${dayObj.name})`;
+                lemburDesc.innerText = 'Hari Minggu full libur! Tidak ada jadwal kerja atau lembur.';
+                lemburBadge.innerText = 'Libur Total';
+                lemburBadge.className = 'text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-400 border border-emerald-800';
+            } else if (selectedDayIndex === 6) {
+                // Saturday
+                lemburControlSection.classList.remove('opacity-50', 'pointer-events-none');
+                lemburTitle.innerHTML = `Masuk Kerja / Lembur (${dayObj.name})`;
+                lemburDesc.innerText = 'Aktifkan jika ada instruksi masuk kerja/lembur Sabtu (maksimal jam 17:00).';
+                lemburBadge.innerText = 'Sering Lembur';
+                lemburBadge.className = 'text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-amber-950 text-amber-400 border border-amber-800';
+            } else {
+                // Mon-Fri
+                lemburControlSection.classList.remove('opacity-50', 'pointer-events-none');
+                lemburTitle.innerHTML = `Status Lembur Kerja (${dayObj.name})`;
+                lemburDesc.innerText = 'Aktifkan jika ada lembur sampai jam 21:30 WIB.';
+                lemburBadge.innerText = 'Kadang Lembur';
+                lemburBadge.className = 'text-[10px] uppercase font-bold px-2 py-0.5 rounded-md bg-purple-950 text-purple-300 border border-purple-800';
+            }
+
+            // Update Label Text
+            if (isLembur && selectedDayIndex !== 0) {
+                toggleLabelText.innerText = "LEMBUR";
+                toggleLabelText.className = "ml-3 text-xs font-extrabold text-cyan-400 tracking-wider animate-pulse";
+                lemburIconBox.className = "w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/50 flex items-center justify-center text-cyan-400 text-lg shadow-neon-cyan";
+            } else {
+                toggleLabelText.innerText = "NORMAL";
+                toggleLabelText.className = "ml-3 text-xs font-bold text-slate-400 min-w-[70px]";
+                lemburIconBox.className = "w-10 h-10 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-lg";
+            }
+        }
+
+        // Render Timeline items
+        function renderTimeline() {
+            const dayObj = DAYS_ID.find(d => d.dayNum === selectedDayIndex);
+            const items = getScheduleData(selectedDayIndex, isLembur);
+
+            // Update Header titles
+            scheduleHeaderTitle.innerText = `Jadwal Hari ${dayObj.name} ${isLembur && selectedDayIndex !== 0 ? '(Lembur)' : ''}`;
+            itemCountBadge.innerText = `${items.length} Aktivitas`;
+            activeDayBadge.innerText = dayObj.name;
+
+            timelineContainer.innerHTML = '';
+
+            items.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = "relative flex items-start gap-3 md:gap-5 group transition-all duration-300";
+
+                // Icon styling based on type
+                let iconBg = "bg-slate-800 border-slate-700 text-slate-300";
+                let cardStyle = "bg-slate-900/80 border-slate-800 hover:border-slate-700";
+                let timeBadgeBg = "bg-slate-800/80 text-blue-300 border-slate-700";
+
+                if (item.type === 'relax') {
+                    iconBg = "bg-cyan-950/80 border-cyan-500/60 text-cyan-400 shadow-neon-cyan";
+                    cardStyle = "bg-gradient-to-r from-cyan-950/20 via-slate-900/90 to-slate-900/90 border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:border-cyan-500/70";
+                    timeBadgeBg = "bg-cyan-950/80 text-cyan-300 border-cyan-700/50";
+                } else if (item.type === 'lembur') {
+                    iconBg = "bg-purple-950/90 border-purple-500/80 text-purple-300 shadow-neon-purple animate-pulse";
+                    cardStyle = "bg-gradient-to-r from-purple-950/40 via-slate-900/90 to-slate-900/90 border-purple-500/50 shadow-neon-purple";
+                    timeBadgeBg = "bg-purple-950/80 text-purple-300 border-purple-700/50";
+                } else if (item.type === 'work') {
+                    iconBg = "bg-blue-950/80 border-blue-500/50 text-blue-400 shadow-neon-blue";
+                    cardStyle = "bg-slate-900/90 border-blue-900/30 hover:border-blue-500/40";
+                    timeBadgeBg = "bg-blue-950/80 text-blue-300 border-blue-800/50";
+                }
+
+                card.innerHTML = `
+                    <!-- Timeline Node Icon -->
+                    <div class="relative z-10 flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-xl border flex items-center justify-center text-xs md:text-sm ${iconBg} transition-transform group-hover:scale-110">
+                        <i class="fa-solid ${item.icon}"></i>
+                    </div>
+
+                    <!-- Content Card -->
+                    <div class="flex-1 p-3.5 md:p-4 rounded-2xl border ${cardStyle} transition-all duration-200">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                            <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full border ${timeBadgeBg} flex items-center gap-1.5">
+                                <i class="fa-regular fa-clock text-[10px]"></i> ${item.time}
+                            </span>
+                            <span class="text-[10px] uppercase font-semibold tracking-wider px-2 py-0.5 rounded-md bg-slate-800/80 text-slate-400 border border-slate-700/50">
+                                ${item.badge}
+                            </span>
+                        </div>
+                        <h3 class="font-bold text-slate-100 text-sm md:text-base ${item.type === 'relax' ? 'neon-text-cyan' : ''} ${item.type === 'lembur' ? 'neon-text-purple' : ''}">
+                            ${item.title}
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                            ${item.desc}
+                        </p>
+                    </div>
+                `;
+
+                timelineContainer.appendChild(card);
+            });
+        }
+
+        // Event Listeners
+        lemburToggle.addEventListener('change', (e) => {
+            isLembur = e.target.checked;
+            updateLemburControlVisibility();
+            renderTimeline();
+        });
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            initRealTimeDate();
+            renderDayTabs();
+            updateLemburControlVisibility();
+            renderTimeline();
+        });
+    </script>
+</body>
+</html>
+```
